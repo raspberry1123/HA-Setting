@@ -1,0 +1,20 @@
+pacemaker on # Pacemakerを利用するための宣言
+
+debug 0
+udpport 694 # 現用系と待機系でインターコネクト通信や、管理用NICを利用した死活監視に使用するポート
+keepalive 2 # インターコネクトの送信間隔(秒)
+warntime 10
+deadtime 30 # インターコネクトの通信が途絶えた後に故障と判定するまでの時間(秒) 
+initdead 30 # 初期起動時に、片系が起動するのを待つ時間(秒)
+logfacility local1 # syslogのファシリティ
+
+bcast eth2 # インターコネクト通信に使用するNIC。
+#bcast eth3 # 複数ある場合は複数行にわたって指定可能。
+
+ucast eth1 172.16.1.19 # 死活監視に利用する管理用NICと、ユニキャスト通信する対向側のIP
+
+node hadoop-master0 # HAクラスタに参加するホストを指定
+node hadoop-master1
+
+watchdog /dev/watchdog
+respawn root /usr/lib64/heartbeat/ifcheckd
